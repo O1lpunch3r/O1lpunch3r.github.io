@@ -63,8 +63,8 @@
 
 				<br>
 				<ul>
-					<li>Master-Student Medieninformatik</li>
-					<li>Werksstudent Nextbike</li>
+					<li>Master-Student Medieninformatik @ HTWK Leipzig</li>
+					<li>Werksstudent @ nextbike Gmbh</li>
 					<li>glücklicher NestJS-Nutzer</li>
 
 				</ul>
@@ -112,6 +112,10 @@
 			</section>
 
 			<section>
+				<h2>Erst die Theorie...</h2>
+			</section>
+
+			<section>
 				<h2>Alles hat einen Anfang...</h2>
 				<pre><code class="hljs" data-trim data-line-numbers>
 					import { NestFactory } from '@nestjs/core';
@@ -134,6 +138,10 @@
 					<li>Provider</li>
 					<li>Guards</li>
 					<li>Pipes</li>
+					<li>Interceptors</li>
+					<li>Middleware</li>
+					<li>Exception Filter</li>
+					<li>...</li>
 				</ul>
 			</section>
 
@@ -191,7 +199,7 @@
 					<h2>Provider</h2>
 
 
-					<p><img id='controller_graphic' src="./img/providers.png" alt="Provider"></p>
+					<p><img id='provider_graphic' src="./img/providers.png" alt="Provider"></p>
 				</section>
 				<section>
 					<pre><code class="hljs" data-trim data-line-numbers>
@@ -257,9 +265,6 @@
 				<section>
 					<pre>
 							<code class="hljs" data-trim data-line-numbers>
-
-
-									import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
 		
 									@Injectable()
 									export class ValidationPipe implements PipeTransform {
@@ -275,6 +280,35 @@
 
 			<section>
 				<section>
+					<h2>Interceptors</h2>
+
+
+					<p><img id='interceptors_graphic' src="./img/interceptors.png" alt="Interceptors"></p>
+				</section>
+				<section>
+					<pre><code class="hljs" data-trim data-line-numbers data-noescape>
+											  
+					@Injectable()
+					export class TransformInterceptor implements NestInterceptor {
+					  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+					    return next.handle().pipe(map(data => ({ data })));
+					  }
+					}
+
+					/*
+
+					{
+					  "data": []
+					}
+
+					*/
+							</code></pre>
+				</section>
+			</section>
+
+
+			<section>
+				<section>
 					<h2>Middleware</h2>
 
 
@@ -283,27 +317,69 @@
 				<section>
 					<pre>
 								<code class="hljs" data-trim data-line-numbers>
-	
-
-										import { Module, NestModule, RequestMethod, MiddlewareConsumer } from '@nestjs/common';
-										import { LoggerMiddleware } from './common/middleware/logger.middleware';
-										import { CatsModule } from './cats/cats.module';
 										
 										@Module({
-										  imports: [CatsModule],
+										  imports: [MeetupModule],
 										})
 										export class AppModule implements NestModule {
 										  configure(consumer: MiddlewareConsumer) {
 											consumer
 											  .apply(LoggerMiddleware)
-											  .forRoutes({ path: 'cats', method: RequestMethod.GET });
+											  .forRoutes({ 
+												  path: 'meetup', 
+												  method: RequestMethod.GET 
+												});
 										  }
 										}
 							</code>
 						</pre>
 				</section>
+				<section>
+					<pre>
+									<code class="hljs" data-trim data-line-numbers>
+		
+										const app = await NestFactory.create(AppModule);
+										app.use(logger);
+										await app.listen(3000);
+								</code>
+							</pre>
+				</section>
 			</section>
 
+
+			<section>
+				<section>
+					<h2>Exception Filter</h2>
+
+
+					<p><img id='exception_filter_graphic' src="./img/exception-filters.png" alt="Exception Filter"></p>
+				</section>
+				<section>
+					<pre>
+									<code class="hljs" data-trim data-line-numbers>
+											
+
+											@Catch(HttpException)
+											export class HttpExceptionFilter implements ExceptionFilter {
+											  catch(exception: HttpException, host: ArgumentsHost) {
+												const ctx = host.switchToHttp();
+												const response = ctx.getResponse();
+												const request = ctx.getRequest();
+												const status = exception.getStatus();
+											
+												response
+												  .status(status)
+												  .json({
+													statusCode: status,
+													timestamp: new Date().toISOString(),
+													path: request.url,
+												  });
+											  }
+											}
+								</code>
+							</pre>
+				</section>
+			</section>
 
 
 			<section>
@@ -317,6 +393,10 @@
 				<p>
 					Vielen Dank für Ihre Aufmerksamkeit !
 				</p>
+
+				<br>
+				<br>
+				<p><small>Presentation made by lovely <a href="https://revealjs.com/#/">reveal.js</a></small></p>
 			</section>
 
 
