@@ -1,0 +1,350 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>NestJS - Presentation Nodejs Meetup Leipzig</title>
+
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/league.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai.css">
+	<link rel="stylesheet" href="css/own.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+
+				<style>
+					#nest-logo {
+						height: 200px;
+						background: none;
+						border: none;
+						box-shadow: none;
+					}
+				</style>
+
+				<p><img id='nest-logo' src="./img/nestjs-logo.svg" alt="Nest"></p>
+
+
+				<h2>NestJS</h2>
+				<h4>A progressive NodeJS framework</h4>
+				<br>
+				<p>
+					<small>Jan Oelschlegel - NodeJS Meetup Leipzig - 08/2019</small>
+				</p>
+
+
+			</section>
+
+			<section data-background-image="./img/flyer2.jpg"></section>
+
+			<section data-background-image="./img/flyer1.jpg"></section>
+
+
+			<section>
+
+				<h2>Wer ist dieser Typ ?</h2>
+
+				<br>
+				<ul>
+					<li>Master-Student Medieninformatik</li>
+					<li>Werksstudent Nextbike</li>
+					<li>glücklicher NestJS-Nutzer</li>
+
+				</ul>
+
+				<br>
+				<br>
+				<p>
+					<small>Xing: <a
+							href="https://www.xing.com/profile/Jan_Oelschlegel">https://www.xing.com/profile/Jan_Oelschlegel</a>
+					</small> </p>
+			</section>
+
+
+			<section>
+
+				<h2>NestJS ? </h2>
+				<q class="fragment" cite="https://docs.nestjs.com/">
+					Nest (or NestJS) is a framework for building efficient, scalable Node.js server-side
+					applications. It uses progressive JavaScript, is built with and fully supports TypeScript (yet still
+					enables developers to code in pure JavaScript) and combines elements of OOP (Object Oriented
+					Programming), FP (Functional Programming), and FRP (Functional Reactive Programming).
+				</q>
+
+			</section>
+
+			<section>
+				<h2>Wer hat's erfunden ?</h2>
+				<p><img id='kamil-picture' src="./img/kamil.png" alt="Kamil"></p>
+
+			</section>
+
+			<section>
+				<h2>Key-Words</h2>
+				<ul>
+					<li>progressive</li>
+					<li>versatile</li>
+					<li>extensible</li>
+					<li>scalable</li>
+					<li>highly testable</li>
+					<li>loosely coupled</li>
+					<li>CLI</li>
+					<li>Dependency Injection</li>
+					<li>Documentation</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>Alles hat einen Anfang...</h2>
+				<pre><code class="hljs" data-trim data-line-numbers>
+					import { NestFactory } from '@nestjs/core';
+					import { AppModule } from './app.module';
+					
+					async function bootstrap() {
+					  const app = await NestFactory.create(AppModule);
+					  await app.listen(3000);
+					}
+					bootstrap();
+
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Komponenten</h2>
+				<ul>
+					<li>Module</li>
+					<li>Controller</li>
+					<li>Provider</li>
+					<li>Guards</li>
+					<li>Pipes</li>
+				</ul>
+			</section>
+
+
+			<section>
+				<section>
+					<h2>Module</h2>
+
+					<p><img id='module_graphic' src="./img/modules.png" alt="Modules"></p>
+				</section>
+				<section>
+					<pre><code class="hljs" data-trim data-line-numbers>
+							import { Module } from '@nestjs/common';
+
+							@Module({
+								imports: [DatabaseModule],
+								controllers: [MeetupController],
+								providers: [MeetupService],
+								exports: [MeetupService],
+							})
+							export class MeetupModule {}
+
+													</code></pre>
+				</section>
+			</section>
+
+
+			<section>
+				<section>
+					<h2>Controller</h2>
+
+
+					<p><img id='controller_graphic' src="./img/controller.png" alt="Controller"></p>
+				</section>
+				<section>
+					<pre><code class="hljs" data-trim data-line-numbers>
+
+							import { Controller, Get } from '@nestjs/common';
+
+							@Controller('meetup')
+							export class MeetupController {
+							  @Get()
+							  findAll(): string {
+								return 'Hello Meetup';
+							  }
+							}
+	
+					</code></pre>
+				</section>
+			</section>
+
+
+			<section>
+				<section>
+					<h2>Provider</h2>
+
+
+					<p><img id='controller_graphic' src="./img/providers.png" alt="Provider"></p>
+				</section>
+				<section>
+					<pre><code class="hljs" data-trim data-line-numbers>
+	
+
+							import { Injectable } from '@nestjs/common';
+							
+							@Injectable()
+							export class MeetupService {
+							  private readonly meetups: string[] = [];
+							
+							  create(meetup: string) {
+								this.meetups.push(meetup);
+							  }
+							
+							  findAll(): string[] {
+								return this.meetups;
+							  }
+							}
+		
+						</code></pre>
+				</section>
+			</section>
+
+
+			<section>
+				<section>
+					<h2>Guards</h2>
+
+
+					<p><img id='guard_graphic' src="./img/guards.png" alt="Guards"></p>
+				</section>
+				<section>
+					<pre>
+							<code class="typescript" data-trim data-line-numbers>
+
+									import { Injectable, 
+										CanActivate, 
+										ExecutionContext } from '@nestjs/common';
+									import { Observable } from 'rxjs';
+									
+									@Injectable()
+									export class AuthGuard implements CanActivate {
+									  canActivate(
+										context: ExecutionContext,
+									  ): boolean | Promise<boolean> | Observable<boolean> {
+										const request = context.switchToHttp().getRequest();
+										return validateRequest(request);
+									  }
+									}
+									</code>
+					</pre>
+				</section>
+			</section>
+
+			<section>
+				<section>
+					<h2>Pipes</h2>
+
+
+					<p><img id='pipe_graphic' src="./img/pipes.png" alt="Pipes"></p>
+				</section>
+				<section>
+					<pre>
+							<code class="hljs" data-trim data-line-numbers>
+
+
+									import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
+		
+									@Injectable()
+									export class ValidationPipe implements PipeTransform {
+									  transform(value: any, metadata: ArgumentMetadata) {
+										return value;
+									  }
+									}
+						</code>
+					</pre>
+				</section>
+			</section>
+
+
+			<section>
+				<section>
+					<h2>Middleware</h2>
+
+
+					<p><img id='middleware_graphic' src="./img/middlewares.png" alt="Middlewares"></p>
+				</section>
+				<section>
+					<pre>
+								<code class="hljs" data-trim data-line-numbers>
+	
+
+										import { Module, NestModule, RequestMethod, MiddlewareConsumer } from '@nestjs/common';
+										import { LoggerMiddleware } from './common/middleware/logger.middleware';
+										import { CatsModule } from './cats/cats.module';
+										
+										@Module({
+										  imports: [CatsModule],
+										})
+										export class AppModule implements NestModule {
+										  configure(consumer: MiddlewareConsumer) {
+											consumer
+											  .apply(LoggerMiddleware)
+											  .forRoutes({ path: 'cats', method: RequestMethod.GET });
+										  }
+										}
+							</code>
+						</pre>
+				</section>
+			</section>
+
+
+
+			<section>
+				<h1>Let's try this shit</h1>
+
+			</section>
+
+
+			<section style="text-align: center;">
+				<h1>THE END</h1>
+				<p>
+					Vielen Dank für Ihre Aufmerksamkeit !
+				</p>
+			</section>
+
+
+		</div>
+	</div>
+	<script src="js/reveal.js">
+	</script>
+
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			controls: true,
+			progress: true,
+			center: true,
+			hash: true,
+
+			transition: 'concave', // none/fade/slide/convex/concave/zoom
+			dependencies: [
+				{ src: 'plugin/markdown/marked.js' },
+				{ src: 'plugin/markdown/markdown.js' },
+				{ src: 'plugin/notes/notes.js', async: true },
+				{ src: 'plugin/highlight/highlight.js', async: true },
+				{ src: 'plugin/zoom-js/zoom.js', async: true },
+			]
+		});
+	</script>
+</body>
+
+</html>
